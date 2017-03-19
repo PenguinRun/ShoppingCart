@@ -15,13 +15,9 @@ var userDelete = require('./routes/userDelete');
 var userPaging = require('./routes/userPaging');
 
 //order
-// var orderProduct = require('./routes/order/orderProduct');
 var orderProductList = require('./routes/order/orderProductList');
-var orderData = require('./routes/order/orderData');
 var orderList = require('./routes/order/orderList');
 var orderModify = require('./routes/order/orderModify');
-// var orderUpdate = require('./routes/order/orderUpdate');
-// var orderProductDelete = require('./routes/order/orderProductDelete');
 var orderComplete = require('./routes/order/orderComplete');
 
 // DataBase
@@ -73,13 +69,9 @@ app.use('/userDelete', userDelete);
 app.use('/userPaging', userPaging);
 
 //order
-// app.use('/orderProduct', orderProduct);
 app.use('/orderProductList', orderProductList);
-app.use('/orderData', orderData);
 app.use('/orderList', orderList);
 app.use('/orderModify', orderModify);
-// app.use('/orderUpdate', orderUpdate);
-// app.use('/orderProductDelete', orderProductDelete);
 app.use('/orderComplete', orderComplete);
 
 // catch 404 and forward to error handler

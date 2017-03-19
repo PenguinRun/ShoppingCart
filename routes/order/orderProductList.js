@@ -4,6 +4,7 @@ var OrderProductList = require('../../controllers/order/orderProductListControll
 
 var orderProductList = new OrderProductList();
 
+router.get('/', orderProductList.getProductData);
 router.post('/', orderProductList.postOrderProductList);
 
 module.exports = router;

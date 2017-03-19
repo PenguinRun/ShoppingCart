@@ -14,18 +14,5 @@ module.exports = class OrderList {
         return;
       }
     )
-
-
-
-    // var db = req.con;
-    // db.query('SELECT * from orderList', function(err, rows) {
-    //   if (err) {
-    //     console.log(err);
-    //   }
-    //   res.json({
-    //     oerderList: rows
-    //   })
-    //   return;
-    // })
   }
 }

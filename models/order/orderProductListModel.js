@@ -1,6 +1,17 @@
 var formidable = require('formidable');
 
 module.exports = class OrderProductListModel {
+  orderProductData(req){
+    var db = req.con;
+    return new Promise((resolve, reject) => {
+      db.query("SELECT * from Product", function(err, rows){
+        if(err){
+          reject(err)
+        }
+        resolve(rows)
+      })
+    })
+  }
   orderProductListData(req) {
     var db = req.con;
     var form = new formidable.IncomingForm();
