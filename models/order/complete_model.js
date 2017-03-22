@@ -1,12 +1,11 @@
+var db = require('../connection_db');
 var nodemailer = require('nodemailer');
 
 module.exports = class OrderCompleteModel {
   //取得訂單資料
-  orderProcutData(req, res, next) {
-    var db = req.con;
-    var OrderID = req.query.OrderID;
+  orderProcutData(orderID) {
       return new Promise((resolve, rejsct) => {
-        db.query('SELECT * FROM orderList WHERE OrderID = ?', OrderID, function(err, rows) {
+        db.query('SELECT * FROM orderList WHERE OrderID = ?', orderID, function(err, rows) {
           if (err) {
             reject(err);
           }
@@ -15,10 +14,7 @@ module.exports = class OrderCompleteModel {
       })
   }
   //完成訂單時，鎖定訂單後寄送email
-  orderCompleteData(req, res, next) {
-    //database 宣告
-    var db = req.con;
-    var OrderID = req.body.OrderID;
+  orderCompleteData(orderID) {
     var result = "";
     var changeIsComplete = {
       isComplete: 1 //change isComplete status
@@ -35,7 +31,7 @@ module.exports = class OrderCompleteModel {
 
     return new Promise((resolve, reject) => {
 
-      db.query('SELECT * FROM orderList WHERE OrderID = ?', OrderID, function(err, rows) {
+      db.query('SELECT * FROM orderList WHERE OrderID = ?', orderID, function(err, rows) {
         if (err) {
           return console.log(err);
         }
@@ -57,13 +53,13 @@ module.exports = class OrderCompleteModel {
 
             } else {
               //若有庫存將進行該項產品庫存刪減
-              db.query(' UPDATE Product, orderList SET Product.Quantity = Product.Quantity - orderList.OrderQuantity WHERE orderList.ProductID = Product.ID and orderList.OrderID = ?;', OrderID, function(err, rows) {
+              db.query(' UPDATE Product, orderList SET Product.Quantity = Product.Quantity - orderList.OrderQuantity WHERE orderList.ProductID = Product.ID and orderList.OrderID = ?;', orderID, function(err, rows) {
                 if (err) {
                   console.log(err);
                 }
               });
 
-              db.query('UPDATE orderList SET ? WHERE OrderID = ?', [changeIsComplete, OrderID], function(err, rows) {
+              db.query('UPDATE orderList SET ? WHERE OrderID = ?', [changeIsComplete, orderID], function(err, rows) {
                 if (err) {
                   return console.log(err);
                 }
@@ -89,7 +85,7 @@ module.exports = class OrderCompleteModel {
                 reject(err);
               }
 
-              result = "訂單編號：" + OrderID + " 已完成，謝謝您使用該服務！詳細的訂單資訊已寄送至" + rows[0].OrderEmail;
+              result = "訂單編號：" + orderID + " 付款已完成，謝謝您使用該服務！詳細的訂單資訊已寄送至" + rows[0].OrderEmail;
 
               resolve(result);
 
@@ -103,7 +99,7 @@ module.exports = class OrderCompleteModel {
             reject(err);
           }
 
-          result = "sorry, 該筆訂單已經完成了！";
+          result = "sorry, 該筆訂單已經付款完成了！";
           resolve(result);
 
         }

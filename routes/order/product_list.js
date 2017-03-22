@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var OrderProductList = require('../../controllers/order/orderProductListController');
+var OrderProductList = require('../../controllers/order/product_list_controller');
 
 var orderProductList = new OrderProductList();
 

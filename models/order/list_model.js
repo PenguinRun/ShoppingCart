@@ -1,6 +1,7 @@
+var db = require('../connection_db');
+
 module.exports = class OrderListModel {
-  getOrderListData(req){
-    var db = req.con;
+  getOrderListData(){
     return new Promise((resolve, reject) => {
       db.query('SELECT * from orderList', function(err, rows) {
         if (err) {

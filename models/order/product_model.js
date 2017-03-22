@@ -1,26 +1,12 @@
+var db = require('../connection_db');
+
 var formidable = require('formidable');
 
 module.exports = class OrderProductModel {
-  orderProductData(req) {
-    var db = req.con;
-    var form = new formidable.IncomingForm();
-    var today = new Date();
-    var currentDateTime = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate() + " " + today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+  orderProductData(orderList) {
     var result = "";
 
     return new Promise((resolve, reject) => {
-
-      form.parse(req, function(err, fields, files) {
-        var orderList = {
-          OrderID: fields.OrderID,
-          CustomerID: fields.CustomerID,
-          ProductID: fields.ProductID,
-          OrderQuantity: fields.Quantity,
-          OrderEmail: fields.Email,
-          Order_Date: currentDateTime,
-          isComplete: 0
-        };
-
         db.query('SELECT * FROM orderList WHERE OrderID = ?', orderList.OrderID, function(err, rows) {
 
           if (rows[0].isComplete === 1) {
@@ -29,7 +15,7 @@ module.exports = class OrderProductModel {
               reject(err);
             }
 
-            result = "sorry, 該筆訂單已經完成了！"
+            result = "sorry, 該筆訂單已經付款完成了！"
             resolve(result);
           } else if (rows[0].isComplete === 0) {
 
@@ -69,8 +55,6 @@ module.exports = class OrderProductModel {
 
           }
         })
-
-      })
     })
 
   }

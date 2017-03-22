@@ -1,26 +1,22 @@
-var formidable = require('formidable');
+var db = require('../connection_db');
 
 //修改訂單資料(ProductQuantity及OrderEmail)
+//試著將isComplete的判斷提取出來
+
 
 module.exports = class OrderUpdate {
-  orderUpdate(req, res, next) {
-    var db = req.con;
+  orderUpdate(orderList) {
     var result= {};
-    var form = new formidable.IncomingForm();
-
-    var today = new Date();
-    var currentDateTime = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate() + " " + today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
 
     return new Promise((resolve, reject) => {
 
-      form.parse(req, function(err, fields, files) {
-        var OrderID = fields.OrderID;
-        var CustomerID = fields.CustomerID;
-        var ProductID = fields.ProductID;
+        var OrderID = orderList.OrderID;
+        var CustomerID = orderList.CustomerID;
+        var ProductID = orderList.ProductID;
 
         //update Quantity in order
         var updateOrderQuantity = {
-          OrderQuantity: fields.Quantity,
+          OrderQuantity: orderList.OrderQuantity,
         }
         db.query('UPDATE orderList SET OrderQuantity = IF(isComplete = 0, ?, OrderQuantity) WHERE OrderID = ? and CustomerID = ? and ProductID = ?', [updateOrderQuantity.OrderQuantity, OrderID, CustomerID, ProductID], function(err, rows) {
           if (err) {
@@ -30,7 +26,7 @@ module.exports = class OrderUpdate {
 
         //update Email for some OrderID in order
         var updateOrderEmail = {
-          OrderEmail: fields.Email
+          OrderEmail: orderList.OrderEmail
         }
 
         db.query('UPDATE orderList SET OrderEmail = IF(isComplete = 0, ?, OrderEmail) WHERE OrderID = ?', [updateOrderEmail.OrderEmail, OrderID, CustomerID, ProductID], function(err, rows) {
@@ -41,10 +37,10 @@ module.exports = class OrderUpdate {
 
         //insert the updateTime in order
         var updateTime = {
-          Update_Date: currentDateTime
+          UpdateDate: orderList.OrderDate
         }
 
-        db.query('UPDATE orderList SET Update_Date = IF(isComplete = 0, ?, Update_Date) WHERE OrderID = ?', [updateTime.Update_Date, OrderID, CustomerID, ProductID], function(err, rows) {
+        db.query('UPDATE orderList SET UpdateDate = IF(isComplete = 0, ?, UpdateDate) WHERE OrderID = ?', [updateTime.UpdateDate, OrderID, CustomerID, ProductID], function(err, rows) {
           if (err) {
             return console.log(err);
           }
@@ -67,10 +63,11 @@ module.exports = class OrderUpdate {
         result.state = "update successful";
         result.updateOrderList = updateOrderList;
         resolve(result);
-      })
     })
   }
 }
+
+
 
 
 

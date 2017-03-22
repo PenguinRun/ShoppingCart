@@ -1,8 +1,8 @@
+var db = require('../connection_db');
 var formidable = require('formidable');
 
 module.exports = class OrderProductListModel {
-  orderProductData(req){
-    var db = req.con;
+  orderProductData(){
     return new Promise((resolve, reject) => {
       db.query("SELECT * from Product", function(err, rows){
         if(err){
@@ -12,15 +12,12 @@ module.exports = class OrderProductListModel {
       })
     })
   }
-  orderProductListData(req) {
-    var db = req.con;
-    var form = new formidable.IncomingForm();
+  orderProductListData(orderList) {
     var result={};
     var today = new Date();
     var currentDateTime = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate() + " " + today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
 
     return new Promise((resolve, reject) => {
-      form.parse(req, function(err, fields, files) {
         db.query('SELECT * FROM orderList', function(err, rows) {
 
           var maxValue = 0;
@@ -34,10 +31,10 @@ module.exports = class OrderProductListModel {
           // console.log("the MAX:" + maxValue);
           var OrderID = maxValue + 1;
 
-          var products = fields.ProductID;
+          var products = orderList.ProductID;
           var productArray = products.split(',');
           // console.log("productArray: " + productArray);
-          var quantitys = fields.Quantity;
+          var quantitys = orderList.Quantity;
           var quantityArray = quantitys.split(',');
           // console.log("quantityArray: " + quantityArray);
 
@@ -65,11 +62,11 @@ module.exports = class OrderProductListModel {
           for (var key in productQuantity) {
             var orderData = {
               OrderID: OrderID,
-              CustomerID: fields.CustomerID,
+              CustomerID: orderList.CustomerID,
               ProductID: parseInt(key),
               OrderQuantity: parseInt(productQuantity[key]),
-              OrderEmail: fields.Email,
-              Order_Date: currentDateTime,
+              OrderEmail: orderList.OrderEmail,
+              OrderDate: orderList.OrderDate,
               isComplete: 0
             };
             // console.log(JSON.stringify({
@@ -96,7 +93,6 @@ module.exports = class OrderProductListModel {
           result.orderData = orderData
           resolve(result);
         })
-      })
     })
   }
 }

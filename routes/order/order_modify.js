@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var OrderModify = require('../../controllers/order/orderModifyController');
+var OrderModify = require('../../controllers/order/modify_controller');
 
 var orderModify = new OrderModify();
 

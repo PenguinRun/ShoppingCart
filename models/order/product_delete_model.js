@@ -1,13 +1,16 @@
+var db = require('../connection_db');
+
 //在刪除訂單產品資料時，可以進行單筆或多筆刪除
 
 module.exports = class OrderProductDelete {
-  ordeDelete(req, res, next) {
-    var db = req.con;
-    var combinationID = req.body.CombinationID;
+  ordeDelete(combinationID) {
     var result = {};
-
     return new Promise((resolve, reject) => {
 
+      if (combinationID === null || combinationID === "undefined" || combinationID === ""){
+        result.state = "[CombinationID]內並無資料";
+        resolve(result);
+      }else{
       // console.log(typeof combinationID);
       //多筆刪除
       if (typeof combinationID === "object") {
@@ -48,6 +51,7 @@ module.exports = class OrderProductDelete {
       result.ID = combinationID;
 
       resolve(result);
+    }
     })
   }
 }

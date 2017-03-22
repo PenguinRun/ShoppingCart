@@ -5,68 +5,38 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var index = require('./routes/index');
-var users = require('./routes/users');
-var userAdd = require('./routes/userAdd.js')
-var uploadimg = require('./routes/uploadimg');
-var userEdit = require('./routes/userEdit');
-var userEdits = require('./routes/userEdits');
-var userDelete = require('./routes/userDelete');
-var userPaging = require('./routes/userPaging');
+//customer
+var customerList = require('./routes/customer/customer_list');
+var customerAdd = require('./routes/customer/customer_add');
+var customerDelete = require('./routes/customer/customer_delete');
+var customerEdit = require('./routes/customer/customer_edit');
+var pagingData = require('./routes/customer/customer_paging');
 
 //order
-var orderProductList = require('./routes/order/orderProductList');
-var orderList = require('./routes/order/orderList');
-var orderModify = require('./routes/order/orderModify');
-var orderComplete = require('./routes/order/orderComplete');
-
-// DataBase
-var mysql = require("mysql");
-
-var con = mysql.createConnection({
-    host: "localhost",
-    user: "PenguinRun",
-    password: "1234",
-    database: "ShoppingCart"
-});
+var orderProductList = require('./routes/order/product_list');
+var orderList = require('./routes/order/order_list');
+var orderModify = require('./routes/order/order_modify');
+var orderComplete = require('./routes/order/order_complete');
 
 console.log("hihi")
 
-
-con.connect(function(err) {
-    if (err) {
-        console.log('connecting error');
-        return;
-    }
-    console.log('connecting success');
-});
 var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(function(req, res, next) {
-    req.con = con;
-    next();
-});
-
-app.use('/', index);
-app.use('/users', users);
-app.use('/userAdd', userAdd);
-app.use('/upload', uploadimg);
-// app.use('/userEdit', userEdit);
-app.use('/userEdits', userEdits);
-app.use('/userDelete', userDelete);
-app.use('/userPaging', userPaging);
+//customer
+app.use('/customerList', customerList);
+app.use('/customerAdd', customerAdd);
+app.use('/customerDelete', customerDelete);
+app.use('/customerEdit', customerEdit);
+app.use('/pagingData', pagingData);
 
 //order
 app.use('/orderProductList', orderProductList);
