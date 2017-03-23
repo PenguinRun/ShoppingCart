@@ -1,11 +1,12 @@
 // DataBase
-var mysql = require("mysql");
+var config = require('../config/development');
+var mysqlt = require("mysql");
 
-var con = mysql.createConnection({
-    host: "localhost",
-    user: "PenguinRun",
-    password: "1234",
-    database: "ShoppingCart"
+var con = mysqlt.createConnection({
+    host: config.mysql.host,
+    user: config.mysql.user,
+    password: config.mysql.password,
+    database: config.mysql.database
 });
 
 con.connect(function(err) {
@@ -17,15 +18,3 @@ con.connect(function(err) {
 });
 
 module.exports = con;
-
-
-
-// function dbLoginData(data){
-//   var con = mysql.createConnection({
-//     host: data.host,
-//     user: data.user,
-//     password: data.password,
-//     database: data.database
-//   })
-//   return con;
-// }

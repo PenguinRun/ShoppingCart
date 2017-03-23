@@ -1,5 +1,6 @@
 var db = require('../connection_db');
 var nodemailer = require('nodemailer');
+var config = require('../../config/development');
 
 module.exports = class OrderCompleteModel {
   //取得訂單資料
@@ -24,8 +25,8 @@ module.exports = class OrderCompleteModel {
     var transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: '1234@gmail.com', //gmail account
-        pass: '1234' //gmail password
+        user: config.senderMail.user, //gmail account
+        pass: config.senderMail.pass //gmail password
       }
     });
 
@@ -37,7 +38,7 @@ module.exports = class OrderCompleteModel {
         }
         var ProductID = rows[0].ProductID;
         var OrderQuantity = rows[0].OrderQuantity;
-
+        var Email = rows[0].OrderEmail;
         //若訂單還未完成
         if (rows[0].isComplete === 0) {
 
@@ -67,7 +68,7 @@ module.exports = class OrderCompleteModel {
 
               var mailOptions = {
                 from: '"Jusin Testin" <1234@gmail.com@mgail.com>',
-                to: rows[0].OrderEmail, //recived
+                to: Email, //recived
                 subject: 'hihi',
                 text: 'Hello, somebody there?',
                 html: '<p>hihi</p>'
@@ -85,7 +86,7 @@ module.exports = class OrderCompleteModel {
                 reject(err);
               }
 
-              result = "訂單編號：" + orderID + " 付款已完成，謝謝您使用該服務！詳細的訂單資訊已寄送至" + rows[0].OrderEmail;
+              result = "訂單編號：" + orderID + " 付款已完成，謝謝您使用該服務！詳細的訂單資訊已寄送至" + Email;
 
               resolve(result);
 
@@ -93,7 +94,8 @@ module.exports = class OrderCompleteModel {
           })
 
           //若訂單已經完成
-        } else if (rows[0].isComplete === 1) {
+        }
+        else if (rows[0].isComplete === 1) {
           //return result
           if (err) {
             reject(err);
