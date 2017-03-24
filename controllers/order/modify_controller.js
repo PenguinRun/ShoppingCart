@@ -21,6 +21,7 @@ module.exports = class OrderModify {
       )
     }
     //新增訂單
+    //嘗試將輸入欄位做成另一個function
   postOrderProduct(req, res, next) {
       var orderProduct = new OrderProductModel();
       var form = new formidable.IncomingForm();

@@ -6,17 +6,10 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 //customer
-var customerList = require('./routes/customer/customer_list');
-var customerAdd = require('./routes/customer/customer_add');
-var customerDelete = require('./routes/customer/customer_delete');
-var customerEdit = require('./routes/customer/customer_edit');
-var pagingData = require('./routes/customer/customer_paging');
+var customer = require('./routes/customer');
 
 //order
-var orderProductList = require('./routes/order/product_list');
-var orderList = require('./routes/order/order_list');
-var orderModify = require('./routes/order/order_modify');
-var orderComplete = require('./routes/order/order_complete');
+var order = require('./routes/order');
 
 console.log("hihi")
 
@@ -32,17 +25,10 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 //customer
-app.use('/customerList', customerList);
-app.use('/customerAdd', customerAdd);
-app.use('/customerDelete', customerDelete);
-app.use('/customerEdit', customerEdit);
-app.use('/pagingData', pagingData);
+app.use('/', customer);
 
 //order
-app.use('/orderProductList', orderProductList);
-app.use('/orderList', orderList);
-app.use('/orderModify', orderModify);
-app.use('/orderComplete', orderComplete);
+app.use('/', order);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
