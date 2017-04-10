@@ -13,7 +13,7 @@ module.exports = class CustomerAdd {
     form.parse(req, function(err, fields, files) {
       if (checkCustomer.checkNull(files) === true) {
         res.json({
-          result: "請選擇一個檔案"
+          err: "請選擇一個檔案"
         })
         return;
       } else if (checkCustomer.checkFileSize(files.img.size) === true) {
@@ -33,7 +33,7 @@ module.exports = class CustomerAdd {
           var key = pem.toString('ascii');
           var hmac = crypto.createHmac('sha1', key);
           hmac.update(fields.Password);
-          var password = hmac.digei3d0st('hex');
+          var password = hmac.digest('hex');
           // console.log('password: ' + password);
           //========================
           var customerList = {
