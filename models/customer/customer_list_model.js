@@ -5,7 +5,7 @@ var db = require('../connection_db');
 module.exports = class CustomerListData{
   getCustomerListData(){
     return new Promise((resolve, reject) => {
-      db.query('SELECT * FROM Customer', function(err, rows) {
+      db.query('SELECT * FROM customer', function(err, rows) {
           if (err) {
               console.log(err);
           }

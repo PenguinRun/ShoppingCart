@@ -25,7 +25,7 @@ module.exports = class OrderProductDelete {
           // console.log('customerIDs: ' + customerIDs);
           // console.log('productIDs: ' + productIDs);
 
-          db.query('DELETE FROM orderList WHERE OrderID = ? and CustomerID = ? and ProductID = ? and isComplete = 0', [orderIDs, customerIDs, productIDs], function(err, rows) {
+          db.query('DELETE FROM orderList WHERE OrderID = ? and CustomerID = ? and ProductID = ? and IsComplete = 0', [orderIDs, customerIDs, productIDs], function(err, rows) {
             if (err) {
               console.log(err);
             }
@@ -40,7 +40,7 @@ module.exports = class OrderProductDelete {
         // console.log('orderID: ' + orderID);
         // console.log('customerID: ' + customerID);
         // console.log('productID: ' + productID);
-        db.query('DELETE FROM orderList WHERE OrderID = ? and CustomerID = ? and ProductID = ? and isComplete = 0', [orderID, customerID, productID], function(err, rows) {
+        db.query('DELETE FROM orderList WHERE OrderID = ? and CustomerID = ? and ProductID = ? and IsComplete = 0', [orderID, customerID, productID], function(err, rows) {
           if (err) {
             console.log(err);
           }

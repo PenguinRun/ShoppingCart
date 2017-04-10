@@ -4,7 +4,7 @@ module.exports = class CustomerEditModel {
   editData(id) {
     var result = "";
     return new Promise((resolve, reject) => {
-      db.query('SELECT * FROM Customer WHERE ID = ?', id, function(err, rows) {
+      db.query('SELECT * FROM customer WHERE ID = ?', id, function(err, rows) {
         if (err) {
           console.log(err);
         }
@@ -16,7 +16,7 @@ module.exports = class CustomerEditModel {
   customerEdit(ID, customerEditData) {
     var result = "";
     return new Promise((resolve, reject) => {
-      var qur = db.query('UPDATE Customer SET ? WHERE ID = ?', [customerEditData, ID], function(err, rows) {
+      var qur = db.query('UPDATE customer SET ? WHERE ID = ?', [customerEditData, ID], function(err, rows) {
         if (err) {
           console.log(err);
         }

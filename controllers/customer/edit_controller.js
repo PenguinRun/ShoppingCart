@@ -34,8 +34,8 @@ module.exports = class CustomerEdit {
             Name: fields.CustomerName,
             password: fields.Password,
             Email: fields.Email,
-            img: data,
-            imgName: files.img.name,
+            Img: data,
+            ImgName: files.img.name,
           };
           customerEditModel.customerEdit(ID, customerEditData).then(
             function(result) {

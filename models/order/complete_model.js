@@ -18,7 +18,7 @@ module.exports = class OrderCompleteModel {
   orderCompleteData(orderID) {
     var result = "";
     var changeIsComplete = {
-      isComplete: 1 //change isComplete status
+      IsComplete: 1 //change IsComplete status
     }
 
     //mail 宣告
@@ -40,10 +40,10 @@ module.exports = class OrderCompleteModel {
         var OrderQuantity = rows[0].OrderQuantity;
         var Email = rows[0].OrderEmail;
         //若訂單還未完成
-        if (rows[0].isComplete === 0) {
+        if (rows[0].IsComplete === 0) {
 
           //判斷是否有庫存
-          db.query('SELECT * FROM Product WHERE ID = ?', ProductID, function(err, rows) {
+          db.query('SELECT * FROM product WHERE ID = ?', ProductID, function(err, rows) {
             if (rows[0].Quantity < OrderQuantity) {
               //return result
               if (err) {
@@ -54,7 +54,7 @@ module.exports = class OrderCompleteModel {
 
             } else {
               //若有庫存將進行該項產品庫存刪減
-              db.query(' UPDATE Product, orderList SET Product.Quantity = Product.Quantity - orderList.OrderQuantity WHERE orderList.ProductID = Product.ID and orderList.OrderID = ?;', orderID, function(err, rows) {
+              db.query(' UPDATE product, orderList SET product.Quantity = product.Quantity - orderList.OrderQuantity WHERE orderList.ProductID = product.ID and orderList.OrderID = ?;', orderID, function(err, rows) {
                 if (err) {
                   console.log(err);
                 }
@@ -95,7 +95,7 @@ module.exports = class OrderCompleteModel {
 
           //若訂單已經完成
         }
-        else if (rows[0].isComplete === 1) {
+        else if (rows[0].IsComplete === 1) {
           //return result
           if (err) {
             reject(err);

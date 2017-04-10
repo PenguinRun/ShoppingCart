@@ -18,7 +18,7 @@ module.exports = class OrderUpdate {
         var updateOrderQuantity = {
           OrderQuantity: orderList.OrderQuantity,
         }
-        db.query('UPDATE orderList SET OrderQuantity = IF(isComplete = 0, ?, OrderQuantity) WHERE OrderID = ? and CustomerID = ? and ProductID = ?', [updateOrderQuantity.OrderQuantity, OrderID, CustomerID, ProductID], function(err, rows) {
+        db.query('UPDATE orderList SET OrderQuantity = IF(IsComplete = 0, ?, OrderQuantity) WHERE OrderID = ? and CustomerID = ? and ProductID = ?', [updateOrderQuantity.OrderQuantity, OrderID, CustomerID, ProductID], function(err, rows) {
           if (err) {
             return console.log(err);
           }
@@ -29,7 +29,7 @@ module.exports = class OrderUpdate {
           OrderEmail: orderList.OrderEmail
         }
 
-        db.query('UPDATE orderList SET OrderEmail = IF(isComplete = 0, ?, OrderEmail) WHERE OrderID = ?', [updateOrderEmail.OrderEmail, OrderID, CustomerID, ProductID], function(err, rows) {
+        db.query('UPDATE orderList SET OrderEmail = IF(IsComplete = 0, ?, OrderEmail) WHERE OrderID = ?', [updateOrderEmail.OrderEmail, OrderID, CustomerID, ProductID], function(err, rows) {
           if (err) {
             return console.log(err);
           }
@@ -40,14 +40,14 @@ module.exports = class OrderUpdate {
           UpdateDate: orderList.OrderDate
         }
 
-        db.query('UPDATE orderList SET UpdateDate = IF(isComplete = 0, ?, UpdateDate) WHERE OrderID = ?', [updateTime.UpdateDate, OrderID, CustomerID, ProductID], function(err, rows) {
+        db.query('UPDATE orderList SET UpdateDate = IF(IsComplete = 0, ?, UpdateDate) WHERE OrderID = ?', [updateTime.UpdateDate, OrderID, CustomerID, ProductID], function(err, rows) {
           if (err) {
             return console.log(err);
           }
         })
 
         //reCompute OrderPrice
-        db.query('UPDATE orderList SET OrderPrice = OrderQuantity * (select Price from Product where ? = Product.ID) WHERE OrderID = ? and CustomerID = ? and ProductID = ?', [ProductID, OrderID, CustomerID, ProductID], function(err, rows) {
+        db.query('UPDATE orderList SET OrderPrice = OrderQuantity * (select Price from product where ? = product.ID) WHERE OrderID = ? and CustomerID = ? and ProductID = ?', [ProductID, OrderID, CustomerID, ProductID], function(err, rows) {
           if (err) {
             console.log(err);
           }
@@ -78,8 +78,8 @@ module.exports = class OrderUpdate {
 //       result: "不好意思，OrderID: " + orderList.OrderID + "及CustomerID: " + orderList.CustomerID + "及ProductID: " + orderList.ProductID + "的組合已經存在。請嘗試另外個Order組合。"
 //     })
 //     return;
-//   }else if (rows[key].OrderID === orderList.list && rows[key].isComplete === 1) {
-//     console.log("the complete: " + rows[key].isComplete);
+//   }else if (rows[key].OrderID === orderList.list && rows[key].IsComplete === 1) {
+//     console.log("the complete: " + rows[key].IsComplete);
 //     res.json({
 //       result: "不好意思，訂單編號：" + orderList.OrderID + " 的訂單已結清，請嘗試另外個編號。"
 //     })

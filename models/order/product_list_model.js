@@ -2,10 +2,10 @@ var db = require('../connection_db');
 var formidable = require('formidable');
 
 module.exports = class OrderProductListModel {
-  orderProductData(){
+  orderProductData() {
     return new Promise((resolve, reject) => {
-      db.query("SELECT * from Product", function(err, rows){
-        if(err){
+      db.query("SELECT * from product", function(err, rows) {
+        if (err) {
           reject(err)
         }
         resolve(rows)
@@ -13,86 +13,86 @@ module.exports = class OrderProductListModel {
     })
   }
   orderProductListData(orderList) {
-    var result={};
+    var result = {};
     var today = new Date();
     var currentDateTime = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate() + " " + today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
 
     return new Promise((resolve, reject) => {
-        db.query('SELECT * FROM orderList', function(err, rows) {
+      db.query('SELECT * FROM orderList', function(err, rows) {
 
-          var maxValue = 0;
-          for (var key in rows) {
-            var value = [];
-            value = rows[key].OrderID;
-            if (value > maxValue) {
-              maxValue = value;
-            }
+        var maxValue = 0;
+        for (var key in rows) {
+          var value = [];
+          value = rows[key].OrderID;
+          if (value > maxValue) {
+            maxValue = value;
           }
-          // console.log("the MAX:" + maxValue);
-          var OrderID = maxValue + 1;
+        }
+        // console.log("the MAX:" + maxValue);
+        var OrderID = maxValue + 1;
 
-          var products = orderList.ProductID;
-          var productArray = products.split(',');
-          // console.log("productArray: " + productArray);
-          var quantitys = orderList.Quantity;
-          var quantityArray = quantitys.split(',');
-          // console.log("quantityArray: " + quantityArray);
+        var products = orderList.ProductID;
+        var productArray = products.split(',');
+        // console.log("productArray: " + productArray);
+        var quantitys = orderList.Quantity;
+        var quantityArray = quantitys.split(',');
+        // console.log("quantityArray: " + quantityArray);
 
-          //productID與quantity合併成新object
-          //array1 [3, 2, 1]
-          //array2 [1, 2, 3]
-          //merge為object:{
-          //  3: 1,
-          //  2: 2,
-          //  1, 3
-          //}
+        //productID與quantity合併成新object
+        //array1 [3, 2, 1]
+        //array2 [1, 2, 3]
+        //merge為object:{
+        //  3: 1,
+        //  2: 2,
+        //  1, 3
+        //}
 
-          var productQuantity = {};
-          for (var i in productArray) {
-            // console.log('productArray i: ' + productArray[i]);
-            var index = productArray.indexOf(productArray[i]);
-            // console.log('the index: ' + index);
-            for (var j in quantityArray) {
-              // console.log('quantityArray j: ' + quantityArray[j]);
-              productQuantity[productArray[i]] = quantityArray[index];
-              // console.log('new quantityArray j: ' + quantityArray[index]);
-            }
+        var productQuantity = {};
+        for (var i in productArray) {
+          // console.log('productArray i: ' + productArray[i]);
+          var index = productArray.indexOf(productArray[i]);
+          // console.log('the index: ' + index);
+          for (var j in quantityArray) {
+            // console.log('quantityArray j: ' + quantityArray[j]);
+            productQuantity[productArray[i]] = quantityArray[index];
+            // console.log('new quantityArray j: ' + quantityArray[index]);
           }
+        }
 
-          for (var key in productQuantity) {
-            var orderData = {
-              OrderID: OrderID,
-              CustomerID: orderList.CustomerID,
-              ProductID: parseInt(key),
-              OrderQuantity: parseInt(productQuantity[key]),
-              OrderEmail: orderList.OrderEmail,
-              OrderDate: orderList.OrderDate,
-              isComplete: 0
-            };
-            // console.log(JSON.stringify({
-            //   orderData
-            // }));
+        for (var key in productQuantity) {
+          var orderData = {
+            OrderID: OrderID,
+            CustomerID: orderList.CustomerID,
+            ProductID: parseInt(key),
+            OrderQuantity: parseInt(productQuantity[key]),
+            OrderEmail: orderList.OrderEmail,
+            OrderDate: orderList.OrderDate,
+            IsComplete: 0
+          };
+          // console.log(JSON.stringify({
+          //   orderData
+          // }));
 
-            //insert order data.
-            db.query('INSERT INTO orderList SET ?', orderData, function(err, rows) {
-                if (err) {
-                  return console.log(err);
-                }
-              })
-              // 計算出OrderPrice後在將值輸入至該orderList
-              // example: update orderList SET OrderPrice = OrderQuantity * (select Price from Product  where orderList.ProductID = Product.ID) where OrderID = 3 and CustomerID = 119 and ProductID = 4;
-
-            db.query('UPDATE orderList SET OrderPrice = OrderQuantity * (select Price from Product where ? = Product.ID) WHERE OrderID = ? and CustomerID = ? and ProductID = ?', [key, orderData.OrderID, orderData.CustomerID, key], function(err, rows) {
+          //insert order data.
+          db.query('INSERT INTO orderList SET ?', orderData, function(err, rows) {
               if (err) {
-                console.log(err);
+                return console.log(err);
               }
             })
-          }
+            // 計算出OrderPrice後在將值輸入至該orderList
+            // example: update orderList SET OrderPrice = OrderQuantity * (select Price from product  where orderList.ProductID = Product.ID) where OrderID = 3 and CustomerID = 119 and ProductID = 4;
 
-          result.state="order successful!";
-          result.orderData = orderData
-          resolve(result);
-        })
+          db.query('UPDATE orderList SET OrderPrice = OrderQuantity * (select Price from product where ? = product.ID) WHERE OrderID = ? and CustomerID = ? and ProductID = ?', [key, orderData.OrderID, orderData.CustomerID, key], function(err, rows) {
+            if (err) {
+              console.log(err);
+            }
+          })
+        }
+
+        result.state = "order successful!";
+        result.orderData = orderData
+        resolve(result);
+      })
     })
   }
 }

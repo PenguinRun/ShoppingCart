@@ -9,7 +9,7 @@ module.exports = class OrderProductModel {
     return new Promise((resolve, reject) => {
         db.query('SELECT * FROM orderList WHERE OrderID = ?', orderList.OrderID, function(err, rows) {
 
-          if (rows[0].isComplete === 1) {
+          if (rows[0].IsComplete === 1) {
 
             if (err) {
               reject(err);
@@ -17,9 +17,9 @@ module.exports = class OrderProductModel {
 
             result = "sorry, 該筆訂單已經付款完成了！"
             resolve(result);
-          } else if (rows[0].isComplete === 0) {
+          } else if (rows[0].IsComplete === 0) {
 
-            db.query('SELECT * FROM Product WHERE ID = ?', orderList.ProductID, function(err, rows) {
+            db.query('SELECT * FROM product WHERE ID = ?', orderList.ProductID, function(err, rows) {
               if (rows[0].Quantity < orderList.OrderQuantity) {
 
                 if (err) {
@@ -38,7 +38,7 @@ module.exports = class OrderProductModel {
                   // 計算出OrderPrice後在將值輸入至該orderList
                   // example: update orderList SET OrderPrice = OrderQuantity * (select Price from Product  where orderList.ProductID = Product.ID) where OrderID = 3 and CustomerID = 119 and ProductID = 4;
 
-                db.query('UPDATE orderList SET OrderPrice = OrderQuantity * (select Price from Product where ? = Product.ID) WHERE OrderID = ? and CustomerID = ? and ProductID = ?', [orderList.ProductID, orderList.OrderID, orderList.CustomerID, orderList.ProductID], function(err, rows) {
+                db.query('UPDATE orderList SET OrderPrice = OrderQuantity * (select Price from product where ? = product.ID) WHERE OrderID = ? and CustomerID = ? and ProductID = ?', [orderList.ProductID, orderList.OrderID, orderList.CustomerID, orderList.ProductID], function(err, rows) {
                   if (err) {
                     console.log(err);
                   }
