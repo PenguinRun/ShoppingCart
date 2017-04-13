@@ -3,6 +3,7 @@ var CheckCustomer = require('../../service/customer_check');
 var fs = require('fs');
 var crypto = require('crypto');
 var formidable = require('formidable');
+
 module.exports = class CustomerAdd {
   postCustomerAdd(req, res, next) {
     var form = new formidable.IncomingForm();
@@ -29,7 +30,7 @@ module.exports = class CustomerAdd {
           }
           //加密
           //========================
-          var pem = fs.readFileSync(__dirname + '/server.pem');
+          var pem = fs.readFileSync('./service/server.pem');
           var key = pem.toString('ascii');
           var hmac = crypto.createHmac('sha1', key);
           hmac.update(fields.Password);

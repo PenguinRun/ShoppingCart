@@ -8,5 +8,6 @@ module.exports = {
     senderMail: {
       user: '1234@gmail.com', //gmail account
       pass: '1234' //gmail password
-    }
+    },
+    secret: 'PenguinRun'
 }

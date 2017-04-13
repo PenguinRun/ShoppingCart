@@ -1,56 +1,110 @@
 var CustomerEditModel = require('../../models/customer/edit_model');
-
+var CheckCustomer = require('../../service/customer_check');
+var Verification = require('./verify');
 var formidable = require('formidable');
 var fs = require('fs');
 
 module.exports = class CustomerEdit {
   //取得單筆會員資料
   getCustomerData(req, res, next) {
-    var id = req.query.id;
-    var customerEditModel = new CustomerEditModel();
-    customerEditModel.editData(id).then(
-      function(result) {
+      //登入判斷
+      var token = req.headers['x-access-token'];
+      //確定token是否有輸入
+      var checkCustomer = new CheckCustomer();
+      if (checkCustomer.checkNull(token) === true) {
         res.json({
-          result: result
+          err: "請輸入token！"
         })
       }
-    )
-  }
-  //修改會員資料
-  updateCustomerEdit(req, res, next) {
-    var customerEditModel = new CustomerEditModel();
-    var form = new formidable.IncomingForm();
-    form.keepExtensions = true; //保留後綴
-
-    // form.uploadDir = __dirname + '/uploads/'; //暫存圖片在uploads
-    form.parse(req, function(err, fields, files) {
-      if (files.img.type === 'image/png' || files.img.type === 'image/jpg' || files.img.type === 'image/jpeg') {
-        fs.readFile(files.img.path, 'base64', function(err, data) {
-          if (err) {
-            return console.log(err);
-          }
-          var ID = fields.CustomerID;
-          var customerEditData = {
-            Name: fields.CustomerName,
-            password: fields.Password,
-            Email: fields.Email,
-            Img: data,
-            ImgName: files.img.name,
-          };
-          customerEditModel.customerEdit(ID, customerEditData).then(
-            function(result) {
+      //認證token
+      var verification = new Verification();
+      verification.accountVerify(token).then(
+          (tokenResult) => {
+            if (tokenResult === false) {
               res.json({
-                status: "ID: " + ID + " 修改成功",
-                result: result
+                err: "token錯誤！"
+              })
+            } else {
+              //取值
+              var customerEditModel = new CustomerEditModel();
+              customerEditModel.editData(tokenResult).then(
+                (result) => {
+                  res.json({
+                    result: result
+                  })
+                }
+              )
+            }
+          }
+        )
+        //取queryID的作法
+        // var id = req.query.id;
+        // var customerEditModel = new CustomerEditModel();
+        // customerEditModel.editData(id).then(
+        //   function(result) {
+        //     res.json({
+        //       result: result
+        //     })
+        //   }
+        // )
+    }
+    //修改會員資料
+  updateCustomerEdit(req, res, next) {
+    //登入判斷
+    var token = req.headers['x-access-token'];
+    //確定token是否有輸入
+    var checkCustomer = new CheckCustomer();
+    if (checkCustomer.checkNull(token) === true) {
+      res.json({
+        err: "請輸入token！"
+      })
+    }
+    //認證token
+    var verification = new Verification();
+    verification.accountVerify(token).then(
+      (tokenResult) => {
+        if (tokenResult === false) {
+          res.json({
+            err: "token錯誤！"
+          })
+        } else {
+          var customerEditModel = new CustomerEditModel();
+          var form = new formidable.IncomingForm();
+          form.keepExtensions = true; //保留後綴
+
+          // form.uploadDir = __dirname + '/uploads/'; //暫存圖片在uploads
+          form.parse(req, function(err, fields, files) {
+            if (files.img.type === 'image/png' || files.img.type === 'image/jpg' || files.img.type === 'image/jpeg') {
+              fs.readFile(files.img.path, 'base64', function(err, data) {
+                if (err) {
+                  return console.log(err);
+                }
+                // var ID = fields.CustomerID; //取field的作法
+                var ID = tokenResult;
+                var customerEditData = {
+                  Name: fields.CustomerName,
+                  password: fields.Password,
+                  Email: fields.Email,
+                  Img: data,
+                  ImgName: files.img.name,
+                };
+                customerEditModel.customerEdit(ID, customerEditData).then(
+                  function(result) {
+                    res.json({
+                      status: "ID: " + ID + " 修改成功",
+                      result: result
+                    })
+                  }
+                )
+              })
+            }else{
+              res.json({
+                err: "請將圖片格式轉為png/jpg/jpeg"
               })
             }
-          )
-        })
-      }else{
-        res.json({
-          err: "請將圖片格式轉為png/jpg/jpeg"
-        })
+          })
+        }
       }
-    })
+    )
   }
 }
