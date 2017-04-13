@@ -1,6 +1,6 @@
 var CustomerEditModel = require('../../models/customer/edit_model');
 var CheckCustomer = require('../../service/customer_check');
-var Verification = require('./verify');
+var Verification = require('../../models/customer/verify');
 var formidable = require('formidable');
 var fs = require('fs');
 
@@ -81,9 +81,18 @@ module.exports = class CustomerEdit {
                 }
                 // var ID = fields.CustomerID; //取field的作法
                 var ID = tokenResult;
+                //加密
+                //========================
+                var pem = fs.readFileSync('./service/server.pem');
+                var key = pem.toString('ascii');
+                var hmac = crypto.createHmac('sha1', key);
+                hmac.update(fields.Password);
+                var password = hmac.digest('hex');
+                // console.log('password: ' + password);
+                //========================
                 var customerEditData = {
                   Name: fields.CustomerName,
-                  password: fields.Password,
+                  Password: password,
                   Email: fields.Email,
                   Img: data,
                   ImgName: files.img.name,
