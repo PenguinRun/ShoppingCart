@@ -1,5 +1,6 @@
 var CustomerAddModel = require('../../models/customer/add_model');
 var CheckCustomer = require('../../service/customer_check');
+var encryption = require('../../models/customer/encryption');
 var fs = require('fs');
 var crypto = require('crypto');
 var formidable = require('formidable');
@@ -19,24 +20,18 @@ module.exports = class CustomerAdd {
         return;
       } else if (checkCustomer.checkFileSize(files.img.size) === true) {
         res.json({
-          err: "請上傳小於3MB的檔案" //印出警示
+          err: "請上傳小於1MB的檔案" //印出警示
         })
         return;
       }
-      if (files.img.type === 'image/png' || files.img.type === 'image/jpg' || files.img.type === 'image/jpeg') {
+      //確定型態是否符合png, jpg, jpeg
+      if (checkCustomer.checkFileType(files.img.type) === true) {
         fs.readFile(files.img.path, 'base64', function(err, data) {
           if (err) {
             return console.log(err);
           }
           //加密
-          //========================
-          var pem = fs.readFileSync('./service/server.pem');
-          var key = pem.toString('ascii');
-          var hmac = crypto.createHmac('sha1', key);
-          hmac.update(fields.Password);
-          var password = hmac.digest('hex');
-          // console.log('password: ' + password);
-          //========================
+          var password = encryption(fields.Password);
           var customerList = {
               Name: fields.Name,
               Password: password,
