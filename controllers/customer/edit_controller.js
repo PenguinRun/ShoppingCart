@@ -84,8 +84,7 @@ module.exports = class CustomerEdit {
               var password = encryption(fields.Password);
               var customerEditData = {
                 Name: fields.CustomerName,
-                Password: password,
-                Email: fields.Email,
+                Password: password
               };
               customerEditModel.customerEdit(ID, customerEditData).then(
                   function(result) {
@@ -115,7 +114,6 @@ module.exports = class CustomerEdit {
                   var customerEditData = {
                     Name: fields.CustomerName,
                     Password: password,
-                    Email: fields.Email,
                     Img: data,
                     ImgName: files.img.name,
                   };
