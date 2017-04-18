@@ -12,6 +12,9 @@ var con = mysqlt.createConnection({
 con.connect(function(err) {
     if (err) {
         console.log('connecting error');
+        res.json({
+          err: "伺服器錯誤，請稍後在試！"
+        })
         return;
     }
     console.log('connecting success');

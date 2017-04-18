@@ -51,7 +51,7 @@ module.exports = class CustomerEdit {
         // )
     }
     //修改會員資料
-  updateCustomerEdit(req, res, next) {
+  putCustomerEdit(req, res, next) {
     //登入判斷
     var token = req.headers['x-access-token'];
     //確定token是否有輸入
@@ -84,7 +84,8 @@ module.exports = class CustomerEdit {
               var password = encryption(fields.Password);
               var customerEditData = {
                 Name: fields.CustomerName,
-                Password: password
+                Password: password,
+                UpdateDate: getCurrentDateTime(),
               };
               customerEditModel.customerEdit(ID, customerEditData).then(
                   function(result) {
@@ -116,6 +117,7 @@ module.exports = class CustomerEdit {
                     Password: password,
                     Img: data,
                     ImgName: files.img.name,
+                    UpdateDate: getCurrentDateTime(),
                   };
                   customerEditModel.customerEdit(ID, customerEditData).then(
                     function(result) {
@@ -139,4 +141,10 @@ module.exports = class CustomerEdit {
       }
     )
   }
+}
+
+function getCurrentDateTime(){
+  var today = new Date();
+  var currentDateTime = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate() + " " + today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+  return currentDateTime;
 }

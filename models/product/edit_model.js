@@ -1,10 +1,10 @@
 var db = require('../connection_db');
 
-module.exports = class CustomerEditModel {
+module.exports = class ProductEditModel {
   editData(ID) {
     var result = "";
     return new Promise((resolve, reject) => {
-      db.query('SELECT * FROM customer WHERE ID = ?', ID, function(err, rows) {
+      db.query('SELECT * FROM product WHERE ID = ?', ID, function(err, rows) {
         if (err) {
           console.log(err);
         }
@@ -13,14 +13,14 @@ module.exports = class CustomerEditModel {
       })
     })
   }
-  customerEdit(ID, customerEditData) {
+  productEdit(ID, productList) {
     var result = "";
     return new Promise((resolve, reject) => {
-      var qur = db.query('UPDATE customer SET ? WHERE ID = ?', [customerEditData, ID], function(err, rows) {
+      var qur = db.query('UPDATE product SET ? WHERE ID = ?', [productList, ID], function(err, rows) {
         if (err) {
           console.log(err);
         }
-        result = customerEditData;
+        result = productList;
         resolve(result)
       })
     })

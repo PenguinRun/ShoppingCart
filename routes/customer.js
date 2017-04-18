@@ -22,13 +22,13 @@ router.post('/customerAdd', customerAdd.postCustomerAdd);
 
 //顧客修改
 router.get('/customerEdit', customerEdit.getCustomerData);
-router.put('/customerEdit', customerEdit.updateCustomerEdit);
+router.put('/customerEdit', customerEdit.putCustomerEdit);
 
 //顧客刪除
 router.delete('/customerDelete', customerDelete.deleteCustomer);
 
 //顧客資料（分頁功能）
-router.get('/pagingData', pagingData.getPagingData);
+router.get('/customerPagingData', pagingData.getPagingData);
 
 //進行Login
 router.post('/login', login.loginCheck);

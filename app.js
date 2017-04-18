@@ -8,6 +8,9 @@ var bodyParser = require('body-parser');
 //customer
 var customer = require('./routes/customer');
 
+//product
+var product = require('./routes/product');
+
 //order
 var order = require('./routes/order');
 
@@ -26,6 +29,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //customer
 app.use('/', customer);
+
+//product
+app.use('/', product);
 
 //order
 app.use('/', order);

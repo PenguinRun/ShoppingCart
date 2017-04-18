@@ -4,7 +4,7 @@ module.exports = class Paging_model {
   pagingData(page, pageSize) {
     var result="";
     return new Promise((resolve, reject) => {
-      db.query('SELECT * FROM customer ORDER BY ID ASC LIMIT ?,?', [(page - 1) * pageSize, pageSize], function(err, rows) {
+      db.query('SELECT * FROM product ORDER BY ID ASC LIMIT ?,?', [(page - 1) * pageSize, pageSize], function(err, rows) {
         if (err) {
           console.log(err);
         }
