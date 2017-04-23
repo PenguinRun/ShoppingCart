@@ -7,9 +7,11 @@ module.exports = class CustomerEditModel {
       db.query('SELECT * FROM customer WHERE ID = ?', ID, function(err, rows) {
         if (err) {
           console.log(err);
+          result = "伺服器錯誤，請稍後在試！"
+          reject(result);
+          return;
         }
-        result = rows;
-        resolve(result);
+        resolve(rows);
       })
     })
   }
@@ -19,6 +21,9 @@ module.exports = class CustomerEditModel {
       var qur = db.query('UPDATE customer SET ? WHERE ID = ?', [customerEditData, ID], function(err, rows) {
         if (err) {
           console.log(err);
+          result = "伺服器錯誤，請稍後在試！"
+          reject(result);
+          return;
         }
         result = customerEditData;
         resolve(result)

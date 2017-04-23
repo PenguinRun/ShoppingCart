@@ -6,43 +6,53 @@ var db = require('../connection_db');
 
 module.exports = class OrderUpdate {
   orderUpdate(orderList) {
-    var result= {};
+    var result = {};
 
     return new Promise((resolve, reject) => {
+      var OrderID = orderList.OrderID;
+      var CustomerID = orderList.CustomerID;
+      var ProductID = orderList.ProductID;
 
-        var OrderID = orderList.OrderID;
-        var CustomerID = orderList.CustomerID;
-        var ProductID = orderList.ProductID;
+      db.query('SELECT * from orderList WHERE OrderID = ? and CustomerID = ? and ProductID =?', [OrderID, CustomerID, ProductID], function(err, rows) {
 
+        if (rows[0] === undefined) {
+          result.err = "沒有該筆資料！"
+          reject(result);
+          return;
+        }
         //update Quantity in order
         var updateOrderQuantity = {
           OrderQuantity: orderList.OrderQuantity,
         }
         db.query('UPDATE orderList SET OrderQuantity = IF(IsComplete = 0, ?, OrderQuantity) WHERE OrderID = ? and CustomerID = ? and ProductID = ?', [updateOrderQuantity.OrderQuantity, OrderID, CustomerID, ProductID], function(err, rows) {
           if (err) {
-            return console.log(err);
+            console.log(err);
+            result.err = "伺服器錯誤，請稍後在試！"
+            reject(result);
+            return;
           }
         })
 
-        //update Email for some OrderID in order
-        var updateOrderEmail = {
-          OrderEmail: orderList.OrderEmail
-        }
-
-        db.query('UPDATE orderList SET OrderEmail = IF(IsComplete = 0, ?, OrderEmail) WHERE OrderID = ?', [updateOrderEmail.OrderEmail, OrderID, CustomerID, ProductID], function(err, rows) {
+        db.query('UPDATE orderList SET OrderEmail = IF(IsComplete = 0, (SELECT Email FROM customer WHERE ID = ?), OrderEmail) WHERE OrderID = ?', [CustomerID, OrderID], function(err, rows) {
           if (err) {
-            return console.log(err);
+            console.log(err);
+            result.err = "伺服器錯誤，請稍後在試！"
+            reject(result);
+            return;
           }
         })
 
         //insert the updateTime in order
         var updateTime = {
-          UpdateDate: orderList.OrderDate
+          UpdateDate: orderList.UpdateDate
         }
 
         db.query('UPDATE orderList SET UpdateDate = IF(IsComplete = 0, ?, UpdateDate) WHERE OrderID = ?', [updateTime.UpdateDate, OrderID, CustomerID, ProductID], function(err, rows) {
           if (err) {
-            return console.log(err);
+            console.log(err);
+            result.err = "伺服器錯誤，請稍後在試！"
+            reject(result);
+            return;
           }
         })
 
@@ -50,6 +60,9 @@ module.exports = class OrderUpdate {
         db.query('UPDATE orderList SET OrderPrice = OrderQuantity * (select Price from product where ? = product.ID) WHERE OrderID = ? and CustomerID = ? and ProductID = ?', [ProductID, OrderID, CustomerID, ProductID], function(err, rows) {
           if (err) {
             console.log(err);
+            result.err = "伺服器錯誤，請稍後在試！"
+            reject(result);
+            return;
           }
         })
 
@@ -58,11 +71,11 @@ module.exports = class OrderUpdate {
         //return the result of update
         var updateOrderList = {
           quantity: updateOrderQuantity.OrderQuantity,
-          email: updateOrderEmail.OrderEmail
         }
         result.state = "update successful";
         result.updateOrderList = updateOrderList;
         resolve(result);
+      })
     })
   }
 }

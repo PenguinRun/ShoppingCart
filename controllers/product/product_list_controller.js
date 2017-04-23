@@ -13,7 +13,11 @@ module.exports = class ProductList {
             result: rows
           })
         }
-      )
+      ).catch(function(err) {
+        res.json({
+          result: err
+        })
+      })
     }
     //取得欲修改商品ID資料
   getProductData(req, res, next) {
@@ -28,12 +32,16 @@ module.exports = class ProductList {
         return;
       }
       productEditModel.editData(ID).then(
-        function(result) {
+        function(rows) {
           res.json({
-            result: result
+            result: rows
           })
         }
-      )
+      ).catch(function(err) {
+        res.json({
+          result: err
+        })
+      })
     }
     //取得分頁資料
   getPagingData(req, res, next) {
@@ -41,12 +49,16 @@ module.exports = class ProductList {
     var pageSize = 3;
     var pagingModel = new PagingModel();
     pagingModel.pagingData(page, pageSize).then(
-      function(result) {
+      function(rows) {
         res.json({
-          result: result
+          result: rows
         })
         return;
       }
-    )
+    ).catch(function(err) {
+      res.json({
+        result: err
+      })
+    })
   }
 }

@@ -16,39 +16,23 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `Customer`
+-- Table structure for table `customer`
 --
 
-DROP TABLE IF EXISTS `Customer`;
+DROP TABLE IF EXISTS `customer`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Customer` (
+CREATE TABLE `customer` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `Name` varchar(20) DEFAULT NULL,
   `Email` varchar(20) DEFAULT NULL,
-  `Password` varchar(20) DEFAULT NULL,
-  `img` longblob,
-  `imgName` varchar(20) DEFAULT NULL,
+  `Password` varchar(200) DEFAULT NULL,
+  `Img` longblob,
+  `ImgName` varchar(20) DEFAULT NULL,
+  `UpdateDate` datetime DEFAULT NULL,
+  `CreateDate` datetime DEFAULT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=129 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `Product`
---
-
-DROP TABLE IF EXISTS `Product`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Product` (
-  `ID` int(10) NOT NULL AUTO_INCREMENT,
-  `Name` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `Price` decimal(5,2) DEFAULT NULL,
-  `Quantity` int(11) DEFAULT NULL,
-  `img` longblob,
-  `imgName` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=144 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -66,14 +50,52 @@ CREATE TABLE `orderList` (
   `OrderPrice` decimal(10,2) DEFAULT NULL,
   `OrderEmail` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
   `OrderDate` datetime DEFAULT NULL,
-  `isComplete` int(5) DEFAULT NULL,
+  `IsComplete` int(5) DEFAULT NULL,
   `UpdateDate` datetime DEFAULT NULL,
   PRIMARY KEY (`OrderID`,`CustomerID`,`ProductID`),
   KEY `CustomerID` (`CustomerID`),
   KEY `ProductID` (`ProductID`),
-  CONSTRAINT `orderList_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `Customer` (`ID`),
-  CONSTRAINT `orderList_ibfk_2` FOREIGN KEY (`ProductID`) REFERENCES `Product` (`ID`)
+  CONSTRAINT `orderList_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `customer` (`ID`),
+  CONSTRAINT `orderList_ibfk_2` FOREIGN KEY (`ProductID`) REFERENCES `product` (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `product`
+--
+
+DROP TABLE IF EXISTS `product`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `product` (
+  `ID` int(10) NOT NULL AUTO_INCREMENT,
+  `Name` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `Price` decimal(5,2) DEFAULT NULL,
+  `Quantity` int(11) DEFAULT NULL,
+  `Img` longblob,
+  `ImgName` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `Remark` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `CreateDate` datetime DEFAULT NULL,
+  `UpdateDate` datetime DEFAULT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `test`
+--
+
+DROP TABLE IF EXISTS `test`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `test` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) DEFAULT NULL,
+  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `time2` datetime DEFAULT NULL,
+  `test_boolean` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -85,4 +107,4 @@ CREATE TABLE `orderList` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-03-22 20:32:29
+-- Dump completed on 2017-04-24  4:38:45

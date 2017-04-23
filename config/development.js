@@ -1,13 +1,15 @@
+require('dotenv').config()
+
 module.exports = {
     mysql: {
-      host: "localhost",
-      user: "PenguinRun",
-      password: "1234",
-      database: "ShoppingCart"
+      host: process.env.HOST,
+      user: process.env.DATABASE_USER,
+      password: process.env.DATABASE_PASSWORD,
+      database: process.env.DATABASE
     },
     senderMail: {
-      user: '1234@gmail.com', //gmail account
-      pass: '1234' //gmail password
+      user: process.env.MAIL_ACCOUNT, //gmail account
+      pass: process.env.MAIL_PASSWORD //gmail password
     },
-    secret: 'PenguinRun'
+    secret: process.env.MY_SECRET
 }

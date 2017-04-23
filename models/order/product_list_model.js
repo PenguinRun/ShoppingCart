@@ -2,24 +2,19 @@ var db = require('../connection_db');
 var formidable = require('formidable');
 
 module.exports = class OrderProductListModel {
-  orderProductData() {
-    return new Promise((resolve, reject) => {
-      db.query("SELECT * from product", function(err, rows) {
-        if (err) {
-          reject(err)
-        }
-        resolve(rows)
-      })
-    })
-  }
+  //訂購整筆商品
   orderProductListData(orderList) {
     var result = {};
     var today = new Date();
-    var currentDateTime = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate() + " " + today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
 
     return new Promise((resolve, reject) => {
       db.query('SELECT * FROM orderList', function(err, rows) {
-
+        if (err) {
+          console.log(err);
+          result.err = "伺服器錯誤，請稍後在試！"
+          reject(result);
+          return;
+        }
         var maxValue = 0;
         for (var key in rows) {
           var value = [];
@@ -65,26 +60,38 @@ module.exports = class OrderProductListModel {
             CustomerID: orderList.CustomerID,
             ProductID: parseInt(key),
             OrderQuantity: parseInt(productQuantity[key]),
-            OrderEmail: orderList.OrderEmail,
             OrderDate: orderList.OrderDate,
             IsComplete: 0
           };
           // console.log(JSON.stringify({
           //   orderData
           // }));
-
           //insert order data.
           db.query('INSERT INTO orderList SET ?', orderData, function(err, rows) {
-              if (err) {
-                return console.log(err);
-              }
+            if (err) {
+              console.log(err);
+              result.err = "伺服器錯誤，請稍後在試！"
+              reject(result);
+              return;
+            }
             })
             // 計算出OrderPrice後在將值輸入至該orderList
             // example: update orderList SET OrderPrice = OrderQuantity * (select Price from product  where orderList.ProductID = Product.ID) where OrderID = 3 and CustomerID = 119 and ProductID = 4;
+          db.query('UPDATE orderList SET OrderEmail = (SELECT Email from customer where ID = ? )', [orderList.CustomerID], function(err, rows){
+            if (err) {
+              console.log(err);
+              result.err = "伺服器錯誤，請稍後在試！"
+              reject(result);
+              return;
+            }
+          })
 
           db.query('UPDATE orderList SET OrderPrice = OrderQuantity * (select Price from product where ? = product.ID) WHERE OrderID = ? and CustomerID = ? and ProductID = ?', [key, orderData.OrderID, orderData.CustomerID, key], function(err, rows) {
             if (err) {
               console.log(err);
+              result.err = "伺服器錯誤，請稍後在試！"
+              reject(result);
+              return;
             }
           })
         }

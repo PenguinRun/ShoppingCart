@@ -10,6 +10,9 @@ module.exports = class ProductDeleteModel {
           // DELETE FROM product WHERE ID IN (1, 2);
           if (err) {
             console.log(err);
+            result = "伺服器錯誤，請稍後在試！"
+            reject(result);
+            return;
           }
           result = "ID: " + ID + " 已經刪除完成！"
           resolve(result);
@@ -18,6 +21,9 @@ module.exports = class ProductDeleteModel {
         db.query('DELETE FROM product WHERE ID = ?', ID, function(err, rows) {
           if (err) {
             console.log(err);
+            result = "伺服器錯誤，請稍後在試！"
+            reject(result);
+            return;
           }
           result = "ID: " + ID + " 已經刪除完成！"
           resolve(result);

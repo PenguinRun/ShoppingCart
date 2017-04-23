@@ -11,6 +11,7 @@ var fs = require('fs');
 var formidable = require('formidable');
 
 module.exports = class ModifyProduct {
+  //新增商品
   postProductAdd(req, res, next) {
     var form = new formidable.IncomingForm();
     var checkProduct = new CheckProduct();
@@ -41,6 +42,7 @@ module.exports = class ModifyProduct {
               Remark: fields.Remark,
               Img: data,
               ImgName: files.Img.name,
+              CreateDate: getCurrentDateTime()
             }
             //判斷哪個參數沒輸入值
           for (var key in productList) {
@@ -59,7 +61,11 @@ module.exports = class ModifyProduct {
               })
               return;
             }
-          )
+          ).catch(function(err) {
+            res.json({
+              result: err
+            })
+          })
         })
       } else {
         res.json({
@@ -94,7 +100,11 @@ module.exports = class ModifyProduct {
               })
               return;
             }
-          )
+          ).catch(function(err) {
+            res.json({
+              result: err
+            })
+          })
           //如果有圖片
       } else if (checkProduct.checkNull(files.Img) === false) {
         if (checkProduct.checkFileSize(files.Img.size) === true) {
@@ -126,7 +136,11 @@ module.exports = class ModifyProduct {
                 })
                 return;
               }
-            )
+            ).catch(function(err) {
+              res.json({
+                result: err
+              })
+            })
           })
         } else {
           res.json({
@@ -146,7 +160,11 @@ module.exports = class ModifyProduct {
           result: result
         })
       }
-    )
+    ).catch(function(err) {
+      res.json({
+        result: err
+      })
+    })
   }
 }
 

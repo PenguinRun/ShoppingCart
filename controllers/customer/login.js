@@ -48,6 +48,10 @@ module.exports = class Login {
           })
         }
       }
-    )
+    ).catch(function(err) {
+      res.json({
+        result: err
+      })
+    })
   }
 }

@@ -7,13 +7,15 @@ module.exports = class Paging_model {
       db.query('SELECT * FROM product ORDER BY ID ASC LIMIT ?,?', [(page - 1) * pageSize, pageSize], function(err, rows) {
         if (err) {
           console.log(err);
+          result = "伺服器錯誤，請稍後在試！"
+          reject(result);
+          return;
         }
         if (rows[0] === undefined){
           result = "已經沒有資料了！"
           resolve(result);
         }else{
-          result = rows;
-          resolve(result);
+          resolve(rows);
         }
       })
     })

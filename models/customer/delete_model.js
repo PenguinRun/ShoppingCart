@@ -10,6 +10,9 @@ module.exports = class customerDeleteModel {
           // DELETE FROM Customer WHERE CustomerID IN (134, 135);
           if (err) {
             console.log(err);
+            result = "伺服器錯誤，請稍後在試！"
+            reject(result);
+            return;
           }
           result = "ID: " + customerID + " 已經刪除完成！"
           resolve(result);
@@ -18,6 +21,9 @@ module.exports = class customerDeleteModel {
         db.query('DELETE FROM customer WHERE ID = ?', customerID, function(err, rows) {
           if (err) {
             console.log(err);
+            result = "伺服器錯誤，請稍後在試！"
+            reject(result);
+            return;
           }
           result = "ID: " + customerID + " 已經刪除完成！"
           resolve(result);
