@@ -24,5 +24,7 @@ router.delete('/orderModify', orderModify.deleteOrderData);
 router.get('/orderComplete', orderList.getOrderCompleteData);
 router.put('/orderComplete', orderModify.putOrderComplete);
 
+//取得月報表
+router.get('/orderMonthList', orderList.getMonthList);
 
 module.exports = router;

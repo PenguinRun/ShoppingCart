@@ -2,6 +2,7 @@ var OrderListModel = require('../../models/order/list_model');
 var OrderDataModel = require('../../models/order/data_model');
 var ProductListModel = require('../../models/product/product_list_model');
 var OrderCompleteModel = require('../../models/order/complete_model');
+var MonthList = require('../../models/order/month_list_model')
 var CheckOrder = require('../../service/order_check');
 var Verification = require('../../models/customer/verify');
 
@@ -101,17 +102,50 @@ module.exports = class OrderList {
     }
     //取得全部產品資料
   getProductData(req, res, next) {
-    var productListModel = new ProductListModel();
-    productListModel.getProductListData().then(
-      function(rows) {
+      var productListModel = new ProductListModel();
+      productListModel.getProductListData().then(
+        function(rows) {
+          res.json({
+            result: rows
+          })
+        }
+      ).catch(function(err) {
         res.json({
-          result: rows
+          result: err
         })
+      })
+    }
+    //取得月報表
+  getMonthList(req, res, next) {
+    var monthList = new MonthList();
+    var year = req.query.year;
+    var month = req.query.month;
+    var checkOrder = new CheckOrder();
+    if (checkOrder.checkNull(year) === true || isNaN(checkOrder.checkTypeInt(year))) {
+      res.json({
+        err: "請在query中輸入正確的year！如：year=2017"
+      })
+      return;
+    }
+    var checkOrder = new CheckOrder();
+    if (checkOrder.checkNull(month) === true || isNaN(checkOrder.checkTypeInt(month))) {
+      res.json({
+        err: "請在query中輸入正確的month！如：month=4"
+      })
+      return;
+    }
+    monthList.excelBuilder(year, month).then(
+      function(result) {
+        res.json({
+          result: result
+        })
+        return;
       }
     ).catch(function(err) {
       res.json({
         result: err
       })
+      return;
     })
   }
 }

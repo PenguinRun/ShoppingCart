@@ -15,6 +15,7 @@
     "formidable": "^1.1.1",
     "morgan": "~1.7.0",
     "nodemailer": "^3.1.5",
-    "serve-favicon": "~2.3.0"
+    "serve-favicon": "~2.3.0",
+    "xlsx-style": "^0.8.13"
   }
 }
