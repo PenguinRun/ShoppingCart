@@ -58,7 +58,7 @@ typings/
 .env
 
 #key
-.pem
+*.pem
 
 #excel file
-.xlsx
+*.xlsx

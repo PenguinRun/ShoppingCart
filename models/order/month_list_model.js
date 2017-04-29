@@ -9,8 +9,8 @@ module.exports = class MonthList {
     // var month = 4;
     var startDate = year + "-" + month + "-" + "01";
     var endDate = year + "-" + month + "-" + "31";
-    console.log(startDate);
-    console.log(endDate);
+    // console.log(startDate);
+    // console.log(endDate);
     var result = "";
     return new Promise(function(resolve, reject) {
       db.query('SELECT product.Name SaleProductName, product.Price SaleProductPrice, SUM(orderList.OrderQuantity) SaleProductQuantity, SUM(orderList.OrderPrice) SaleProductPriceTotal FROM product, orderList WHERE product.ID = orderList.ProductID AND orderList.IsComplete = 1 AND OrderDate>= ? AND OrderDate<= ? GROUP BY product.Name, product.Price', [startDate, endDate], function(err, rows) {

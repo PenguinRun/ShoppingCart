@@ -143,7 +143,7 @@ module.exports = class OrderList {
       }
     ).catch(function(err) {
       res.json({
-        result: err
+        err: err
       })
       return;
     })
